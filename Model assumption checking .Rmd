@@ -1,0 +1,35 @@
+---
+title: "Airbnb Project"
+author: "Keqin Cao"
+date: "5/4/2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+#Check model assumptions: constant variance
+```{r}
+airbnb <- read.csv("airbnb.csv")
+airbnb$last_scraped<- NULL
+airbnb$amenities<- NULL
+airbnb$id<- NULL
+
+head(airbnb)
+linearfit<- lm(price~host_total_listings_count+latitude +longitude+factor(accommodates)+factor(bathrooms)+factor(bedrooms)+factor(beds)+factor(minimum_nights)+cleaning_fee,data = airbnb)
+anova(linearfit)
+library(ggplot2)
+
+fitted_residual<-ggplot(data=airbnb,aes(x=fitted(linearfit), y = resid(linearfit))) +geom_jitter( alpha=0.4, fill="skyblue") +
+  theme_bw()+xlab("Fitted Value")+
+  ylab("Residual Value")+
+  ggtitle("Residual vs. Fitted Plot")+
+  geom_hline(aes(yintercept=0), color="red")
+fitted_residual
+```
+
+# Check the price itself if it is normally distributed
+```{r}
+qqnorm(airbnb$price)
+```
+
+ 
